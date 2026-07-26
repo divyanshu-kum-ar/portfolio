@@ -110,3 +110,45 @@
 .gradient-border {
   --bg: #ffffff;
 }
+
+/* Accessibility: Keyboard focus visual indicator */
+*:focus-visible {
+  outline: 2px solid #6366f1 !important;
+  outline-offset: 2px !important;
+}
+
+/* Accessibility: Respect motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-delay: 0s !important;
+    transition-duration: 0s !important;
+  }
+}
+
+/* Custom Light/Dark Theme Helpers for Skills Section */
+.skills-section-bg {
+  background: linear-gradient(180deg, #fafbff 0%, #f0f4ff 50%, #fafbff 100%);
+}
+.dark .skills-section-bg {
+  background: linear-gradient(180deg, #060818 0%, #080d1f 50%, #060818 100%);
+}
+
+.skill-card-idle {
+  background: rgba(20, 16, 10, 0.02);
+  border: 1px solid rgba(20, 16, 10, 0.06);
+}
+.dark .skill-card-idle {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Premium smooth theme transition overrides */
+body, .card-glass, .gradient-border, section, header, nav, button, a, input, textarea {
+  transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease, box-shadow 300ms ease;
+}
+

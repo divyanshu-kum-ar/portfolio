@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://portfolio-olive-seven-20.vercel.app/sitemap.xml

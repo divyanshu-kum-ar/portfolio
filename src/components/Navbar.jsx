@@ -1,7 +1,7 @@
 // Navbar.jsx
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiMenu, FiX } from 'react-icons/fi'
+import { FiMenu, FiX, FiSun, FiMoon } from 'react-icons/fi'
 
 const LINKS = [
   { label: 'About',      href: '#about'      },
@@ -11,7 +11,7 @@ const LINKS = [
   { label: 'Contact',    href: '#contact'    },
 ]
 
-export default function Navbar() {
+export default function Navbar({ darkMode, setDarkMode }) {
   const [scrolled, setScrolled] = useState(false)
   const [active,   setActive]   = useState('')
   const [open,     setOpen]     = useState(false)
@@ -32,6 +32,17 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Keyboard navigation: Close mobile drawer on pressing Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
   return (
     <>
       <motion.header
@@ -40,10 +51,10 @@ export default function Navbar() {
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         className="fixed inset-x-0 top-0 z-50"
         style={{
-          background: scrolled ? 'rgba(253,251,247,0.88)' : 'transparent',
+          background: scrolled ? (darkMode ? 'rgba(13,15,26,0.88)' : 'rgba(253,251,247,0.88)') : 'transparent',
           backdropFilter: scrolled ? 'blur(18px) saturate(160%)' : 'none',
           WebkitBackdropFilter: scrolled ? 'blur(18px) saturate(160%)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(20,16,10,0.07)' : '1px solid transparent',
+          borderBottom: scrolled ? (darkMode ? '1px solid rgba(255,255,255,0.07)' : '1px solid rgba(20,16,10,0.07)') : '1px solid transparent',
           transition: 'background 0.3s, border-color 0.3s, backdrop-filter 0.3s',
         }}
       >
@@ -62,7 +73,7 @@ export default function Navbar() {
               style={{
                 fontSize: 17,
                 fontFamily: "'Instrument Serif', Georgia, serif",
-                color: '#14100a',
+                color: darkMode ? '#ffffff' : '#14100a',
                 letterSpacing: '-0.04em',
               }}
             >
@@ -75,7 +86,7 @@ export default function Navbar() {
           </a>
 
           {/* Desktop links */}
-          <nav className="hidden md:flex items-center gap-0.5">
+          <nav className="hidden md:flex items-center gap-0.5" aria-label="Desktop Navigation">
             {LINKS.map(({ label, href }) => {
               const id = href.slice(1)
               const isActive = active === id
@@ -83,14 +94,20 @@ export default function Navbar() {
                 <a
                   key={id}
                   href={href}
-                  className="relative px-3.5 py-1.5 rounded-lg text-[13px] font-medium"
+                  className="relative px-3.5 py-1.5 rounded-lg text-[13px] font-medium transition-colors duration-150"
+                  aria-current={isActive ? "page" : undefined}
                   style={{
-                    color: isActive ? '#14100a' : '#6b6460',
-                    transition: 'color 0.15s',
+                    color: isActive ? (darkMode ? '#ffffff' : '#14100a') : (darkMode ? '#a1a1aa' : '#6b6460'),
                     textDecoration: 'none',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.color = '#14100a'; e.currentTarget.style.background = 'rgba(20,16,10,0.04)' }}
-                  onMouseLeave={e => { e.currentTarget.style.color = isActive ? '#14100a' : '#6b6460'; e.currentTarget.style.background = 'transparent' }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.color = darkMode ? '#ffffff' : '#14100a'
+                    e.currentTarget.style.background = darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(20,16,10,0.04)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.color = isActive ? (darkMode ? '#ffffff' : '#14100a') : (darkMode ? '#a1a1aa' : '#6b6460')
+                    e.currentTarget.style.background = 'transparent'
+                  }}
                 >
                   {label}
                   {isActive && (
@@ -108,12 +125,26 @@ export default function Navbar() {
 
           {/* CTA + hamburger */}
           <div className="flex items-center gap-2">
+            {/* Theme Toggle Button */}
+            <button
+              onClick={() => setDarkMode(d => !d)}
+              className="w-9 h-9 flex items-center justify-center rounded-lg transition-colors border-none"
+              style={{
+                color: darkMode ? '#ffffff' : '#14100a',
+                background: darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(20,16,10,0.05)',
+                cursor: 'pointer',
+              }}
+              aria-label="Toggle light/dark theme"
+            >
+              {darkMode ? <FiSun className="w-4 h-4" /> : <FiMoon className="w-4 h-4" />}
+            </button>
+
             <a
               href="mailto:divyanshu975677@gmail.com"
               className="hidden md:inline-flex items-center text-[13px] font-semibold px-4 py-1.5 rounded-lg"
               style={{
-                background: '#14100a',
-                color: '#fdfbf7',
+                background: darkMode ? '#ffffff' : '#14100a',
+                color: darkMode ? '#0d0f1a' : '#fdfbf7',
                 textDecoration: 'none',
                 transition: 'opacity 0.15s',
               }}
@@ -124,9 +155,14 @@ export default function Navbar() {
             </a>
             <button
               className="md:hidden w-9 h-9 flex items-center justify-center rounded-lg"
-              style={{ color: '#14100a', background: 'rgba(20,16,10,0.05)' }}
+              style={{
+                color: darkMode ? '#ffffff' : '#14100a',
+                background: darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(20,16,10,0.05)'
+              }}
               onClick={() => setOpen(o => !o)}
-              aria-label="Toggle menu"
+              aria-label="Toggle navigation menu"
+              aria-expanded={open}
+              aria-controls="mobile-navigation-drawer"
             >
               {open ? <FiX className="w-4 h-4" /> : <FiMenu className="w-4 h-4" />}
             </button>
@@ -137,7 +173,9 @@ export default function Navbar() {
       {/* Mobile drawer */}
       <AnimatePresence>
         {open && (
-          <motion.div
+          <motion.nav
+            id="mobile-navigation-drawer"
+            aria-label="Mobile Navigation"
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
@@ -145,36 +183,45 @@ export default function Navbar() {
             className="fixed inset-x-0 z-40 md:hidden"
             style={{
               top: 58,
-              background: 'rgba(253,251,247,0.97)',
+              background: darkMode ? 'rgba(13,15,26,0.97)' : 'rgba(253,251,247,0.97)',
               backdropFilter: 'blur(20px)',
-              borderBottom: '1px solid rgba(20,16,10,0.07)',
+              borderBottom: darkMode ? '1px solid rgba(255,255,255,0.07)' : '1px solid rgba(20,16,10,0.07)',
             }}
           >
             <div className="max-w-5xl mx-auto px-6 py-5 flex flex-col gap-1">
-              {LINKS.map(({ label, href }, i) => (
-                <motion.a
-                  key={href}
-                  href={href}
-                  onClick={() => setOpen(false)}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.04 }}
-                  className="py-2.5 px-3 rounded-lg text-[14px] font-medium"
-                  style={{ color: '#14100a', textDecoration: 'none' }}
-                >
-                  {label}
-                </motion.a>
-              ))}
+              {LINKS.map(({ label, href }, i) => {
+                const id = href.slice(1)
+                const isActive = active === id
+                return (
+                  <motion.a
+                    key={href}
+                    href={href}
+                    onClick={() => setOpen(false)}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                    className="py-2.5 px-3 rounded-lg text-[14px] font-medium"
+                    aria-current={isActive ? "page" : undefined}
+                    style={{ color: darkMode ? '#ffffff' : '#14100a', textDecoration: 'none' }}
+                  >
+                    {label}
+                  </motion.a>
+                )
+              })}
               <a
                 href="mailto:divyanshu975677@gmail.com"
                 onClick={() => setOpen(false)}
                 className="mt-2 py-2.5 px-3 rounded-lg text-[14px] font-semibold text-center"
-                style={{ background: '#14100a', color: '#fdfbf7', textDecoration: 'none' }}
+                style={{
+                  background: darkMode ? '#ffffff' : '#14100a',
+                  color: darkMode ? '#0d0f1a' : '#fdfbf7',
+                  textDecoration: 'none'
+                }}
               >
                 Say hello
               </a>
             </div>
-          </motion.div>
+          </motion.nav>
         )}
       </AnimatePresence>
     </>

@@ -41,8 +41,8 @@ export default function Footer() {
                 key={label}
                 href={href}
                 target="_blank"
-                rel="noreferrer"
-                aria-label={label}
+                rel="noopener noreferrer"
+                aria-label={`Visit Divyanshu's ${label} profile in a new tab`}
                 whileHover={{ scale: 1.15, y: -2 }}
                 whileTap={{ scale: 0.9 }}
                 className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-surface-dark-border text-gray-500 dark:text-gray-400 hover:text-ink-500 dark:hover:text-ink-400 transition-colors"

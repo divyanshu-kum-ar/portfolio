@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
-import { FiMail, FiPhone, FiMapPin, FiSend, FiCheck } from 'react-icons/fi'
+import { FiMail, FiPhone, FiMapPin, FiSend, FiCheck, FiAlertCircle } from 'react-icons/fi'
 import { FaGithub, FaLinkedin } from 'react-icons/fa'
 import { SiLeetcode } from 'react-icons/si'
 
@@ -23,21 +23,62 @@ export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    // Simulate form submission
-    await new Promise(r => setTimeout(r, 1500))
-    setLoading(false)
-    setSubmitted(true)
-    setForm({ name: '', email: '', message: '' })
+    setError('')
+
+    const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY
+
+    if (!accessKey) {
+      setError('Form service key is missing. Please check back later.')
+      setLoading(false)
+      return
+    }
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: form.name.trim(),
+          email: form.email.trim(),
+          message: form.message.trim(),
+        }),
+      })
+
+      const result = await response.json()
+
+      if (response.status === 200 && result.success) {
+        setSubmitted(true)
+        setForm({ name: '', email: '', message: '' })
+      } else {
+        setError(result.message || 'Submission failed. Please try again.')
+      }
+    } catch (err) {
+      setError('A network error occurred. Please verify your connection.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <section id="contact" className="section-padding relative">
       <div className="absolute bottom-0 right-0 w-72 h-72 bg-ink-400/10 rounded-full blur-3xl" />
       <div className="absolute top-0 left-0 w-64 h-64 bg-violet-400/10 rounded-full blur-3xl" />
+
+      {/* Screen Reader Announcements */}
+      <div aria-live="polite" className="sr-only">
+        {loading && "Sending your message..."}
+        {submitted && "Your message has been sent successfully!"}
+        {error && `Error: ${error}`}
+      </div>
 
       <div className="container-max" ref={ref}>
         <motion.div
@@ -67,7 +108,7 @@ export default function Contact() {
             <div className="gradient-border p-6">
               <h3 className="font-display font-bold text-xl text-gray-900 dark:text-white mb-2">Let's work together</h3>
               <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                I'm currently open to internship opportunities, freelance projects, and full-time roles. 
+                I'm currently open to internship opportunities, freelance projects, and full-time roles.
                 If you have a project that needs a dedicated developer, feel free to reach out!
               </p>
             </div>
@@ -76,7 +117,7 @@ export default function Contact() {
               <a
                 key={label}
                 href={href}
-                className="card-glass p-4 flex items-center gap-4 hover:shadow-md transition-shadow group"
+                className="card-glass p-4 flex items-center gap-4 hover:shadow-md transition-shadow group animate-transition"
               >
                 <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-ink-500 to-violet-500 flex items-center justify-center text-white flex-shrink-0 shadow-lg group-hover:shadow-ink-500/30 transition-shadow">
                   <Icon className="w-4 h-4" />
@@ -91,17 +132,17 @@ export default function Contact() {
             {/* Socials */}
             <div className="card-glass p-5">
               <p className="text-xs font-mono text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">Find me on</p>
-              <div className="flex gap-3">
+              <div className="flex gap-2 sm:gap-3">
                 {socials.map(({ icon: Icon, href, label, color }) => (
                   <motion.a
                     key={label}
                     href={href}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     aria-label={label}
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.9 }}
-                    className={`flex-1 flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-50 dark:bg-surface-dark-border text-gray-500 dark:text-gray-400 ${color} transition-all border border-transparent hover:border-ink-200 dark:hover:border-ink-700/50`}
+                    className={`flex-1 flex flex-col items-center gap-1.5 p-2 sm:p-3 rounded-xl bg-gray-50 dark:bg-surface-dark-border text-gray-500 dark:text-gray-400 ${color} transition-all border border-transparent hover:border-ink-200 dark:hover:border-ink-700/50`}
                   >
                     <Icon className="w-5 h-5" />
                     <span className="text-xs font-medium">{label}</span>
@@ -138,8 +179,9 @@ export default function Contact() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Your Name</label>
+                    <label htmlFor="contact-name" className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Your Name</label>
                     <input
+                      id="contact-name"
                       type="text"
                       required
                       value={form.name}
@@ -149,8 +191,9 @@ export default function Contact() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Email Address</label>
+                    <label htmlFor="contact-email" className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Email Address</label>
                     <input
+                      id="contact-email"
                       type="email"
                       required
                       value={form.email}
@@ -160,8 +203,9 @@ export default function Contact() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Message</label>
+                    <label htmlFor="contact-message" className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Message</label>
                     <textarea
+                      id="contact-message"
                       required
                       rows={5}
                       value={form.message}
@@ -170,6 +214,18 @@ export default function Contact() {
                       className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-surface-dark-border border border-gray-200 dark:border-surface-dark-border focus:border-ink-400 dark:focus:border-ink-500 focus:ring-2 focus:ring-ink-400/20 outline-none text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 transition-all resize-none"
                     />
                   </div>
+
+                  {error && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center gap-2 p-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-xl"
+                    >
+                      <FiAlertCircle className="w-4 h-4 flex-shrink-0" />
+                      <span>{error}</span>
+                    </motion.div>
+                  )}
+
                   <motion.button
                     type="submit"
                     disabled={loading}

@@ -17,9 +17,9 @@ const rise = {
 }
 
 const SOCIALS = [
-  { Icon: FiGithub,   href: 'https://github.com/divyanshu-kum-ar',                        title: 'GitHub'   },
-  { Icon: FiLinkedin, href: 'https://linkedin.com/in/divyanshu-kumar-974685294/',           title: 'LinkedIn' },
-  { Icon: SiLeetcode, href: 'https://leetcode.com/u/divyanshu_kumar01/',                   title: 'LeetCode' },
+  { Icon: FiGithub, href: 'https://github.com/divyanshu-kum-ar', title: 'GitHub' },
+  { Icon: FiLinkedin, href: 'https://linkedin.com/in/divyanshu-kumar-974685294/', title: 'LinkedIn' },
+  { Icon: SiLeetcode, href: 'https://leetcode.com/u/divyanshu_kumar01/', title: 'LeetCode' },
 ]
 
 export default function Hero() {
@@ -27,7 +27,6 @@ export default function Hero() {
     <section
       id="home"
       className="relative min-h-screen flex items-center overflow-hidden"
-      style={{ background: '#fdfbf7' }}
     >
       {/* ── Grain texture overlay ─────────────────────────────── */}
       <div
@@ -89,12 +88,11 @@ export default function Hero() {
             {/* Name */}
             <motion.h1
               variants={rise}
-              className="mb-5 font-black leading-[1.02] tracking-tight"
+              className="mb-5 font-black leading-[1.02] tracking-tight text-[#14100a] dark:text-white"
               style={{
                 fontFamily: "'Instrument Serif', Georgia, 'Times New Roman', serif",
                 fontSize: 'clamp(3rem, 6.5vw, 5rem)',
                 letterSpacing: '-0.03em',
-                color: '#14100a',
               }}
             >
               Divyanshu{' '}
@@ -114,29 +112,24 @@ export default function Hero() {
             {/* One-line description */}
             <motion.p
               variants={rise}
-              className="mb-10 leading-relaxed"
+              className="mb-10 leading-relaxed text-[#6b6460] dark:text-gray-400"
               style={{
                 fontSize: 'clamp(15px, 1.8vw, 17px)',
-                color: '#6b6460',
                 maxWidth: 440,
               }}
             >
-             Building modern, scalable, and user-centric web applications using the MERN stack. Passionate about clean code, problem solving, and creating impactful digital experiences.
+              Building modern, scalable, and user-centric web applications using the MERN stack. Passionate about clean code, problem solving, and creating impactful digital experiences.
             </motion.p>
 
             {/* CTAs */}
             <motion.div variants={rise} className="flex flex-wrap items-center gap-3 mb-10">
               <a
                 href="#projects"
-                className="inline-flex items-center gap-1.5 text-[14px] font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 active:scale-[0.97]"
+                className="inline-flex items-center gap-1.5 text-[14px] font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 active:scale-[0.97] bg-[#14100a] dark:bg-white text-[#fdfbf7] dark:text-[#0d0f1a] hover:opacity-90"
                 style={{
-                  background: '#14100a',
-                  color: '#fdfbf7',
                   boxShadow: '0 1px 12px rgba(20,16,10,0.18)',
                   textDecoration: 'none',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#2a2018' }}
-                onMouseLeave={e => { e.currentTarget.style.background = '#14100a' }}
               >
                 See my work
                 <FiArrowUpRight className="w-3.5 h-3.5" />
@@ -144,16 +137,11 @@ export default function Hero() {
               <a
                 href="/resume.pdf"
                 target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-[14px] font-medium px-5 py-2.5 rounded-xl transition-all duration-200 active:scale-[0.97]"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[14px] font-medium px-5 py-2.5 rounded-xl transition-all duration-200 active:scale-[0.97] bg-transparent text-[#4a3f35] dark:text-gray-300 border border-[rgba(20,16,10,0.15)] dark:border-[rgba(255,255,255,0.15)] hover:bg-[rgba(20,16,10,0.04)] dark:hover:bg-[rgba(255,255,255,0.06)]"
                 style={{
-                  background: 'transparent',
-                  color: '#4a3f35',
-                  border: '1px solid rgba(20,16,10,0.15)',
                   textDecoration: 'none',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,16,10,0.04)' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
               >
                 Resume
               </a>
@@ -166,25 +154,13 @@ export default function Hero() {
                   key={title}
                   href={href}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   title={title}
-                  className="w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-200"
+                  className="w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-200 text-[#6b6460] dark:text-gray-400 border border-[rgba(20,16,10,0.1)] dark:border-[rgba(255,255,255,0.1)] bg-[rgba(20,16,10,0.02)] dark:bg-[rgba(255,255,255,0.02)] hover:text-[#14100a] dark:hover:text-white hover:bg-[rgba(20,16,10,0.06)] dark:hover:bg-[rgba(255,255,255,0.08)] hover:-translate-y-0.5"
                   style={{
-                    color: '#6b6460',
-                    border: '1px solid rgba(20,16,10,0.1)',
-                    background: 'rgba(20,16,10,0.02)',
                     textDecoration: 'none',
                   }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.color = '#14100a'
-                    e.currentTarget.style.background = 'rgba(20,16,10,0.06)'
-                    e.currentTarget.style.transform = 'translateY(-2px)'
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.color = '#6b6460'
-                    e.currentTarget.style.background = 'rgba(20,16,10,0.02)'
-                    e.currentTarget.style.transform = 'none'
-                  }}
+                  aria-label={`Visit my ${title} profile in a new tab`}
                 >
                   <Icon className="w-[15px] h-[15px]" />
                 </a>
@@ -263,22 +239,16 @@ export default function Hero() {
 
               {/* Year tag */}
               <div
-                className="absolute -bottom-4 -left-4 rounded-xl px-3 py-2"
-                style={{
-                  background: '#fdfbf7',
-                  border: '1px solid rgba(20,16,10,0.08)',
-                  boxShadow: '0 4px 16px rgba(20,16,10,0.08)',
-                }}
+                className="absolute -bottom-4 -left-4 rounded-xl px-3 py-2 bg-[#fdfbf7] dark:bg-surface-dark-card border border-[rgba(20,16,10,0.08)] dark:border-surface-dark-border shadow-lg shadow-black/5"
               >
                 <p
-                  className="text-[10px] font-semibold tracking-widest uppercase"
-                  style={{ color: '#9c836a' }}
+                  className="text-[10px] font-semibold tracking-widest uppercase text-[#9c836a] dark:text-[#c4a482]"
                 >
                   B.Tech CSE
                 </p>
                 <p
-                  className="text-[12px] font-bold"
-                  style={{ color: '#14100a', letterSpacing: '-0.02em' }}
+                  className="text-[12px] font-bold text-[#14100a] dark:text-white"
+                  style={{ letterSpacing: '-0.02em' }}
                 >
                   2023 – Present
                 </p>

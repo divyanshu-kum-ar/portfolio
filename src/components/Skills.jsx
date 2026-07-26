@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import {
   SiJavascript, SiReact, SiNodedotjs, SiExpress,
@@ -12,35 +12,35 @@ const GROUPS = [
   {
     label: 'Languages',
     items: [
-      { name: 'Java',       Icon: FaJava,        hex: '#f97316' },
-      { name: 'JavaScript', Icon: SiJavascript,   hex: '#facc15' },
+      { name: 'Java', Icon: FaJava, hex: '#f97316' },
+      { name: 'JavaScript', Icon: SiJavascript, hex: '#facc15' },
     ],
   },
   {
     label: 'Frontend',
     items: [
-      { name: 'React',    Icon: SiReact,       hex: '#38bdf8' },
-      { name: 'HTML5',    Icon: SiHtml5,       hex: '#f87171' },
-      { name: 'CSS3',     Icon: FaCss3Alt,     hex: '#60a5fa' },
+      { name: 'React', Icon: SiReact, hex: '#38bdf8' },
+      { name: 'HTML5', Icon: SiHtml5, hex: '#f87171' },
+      { name: 'CSS3', Icon: FaCss3Alt, hex: '#60a5fa' },
       { name: 'Tailwind', Icon: SiTailwindcss, hex: '#34d399' },
     ],
   },
   {
     label: 'Backend',
     items: [
-      { name: 'Node.js',   Icon: SiNodedotjs, hex: '#4ade80' },
-      { name: 'Express',   Icon: SiExpress,   hex: '#a78bfa' },
-      { name: 'REST APIs', Icon: TbApi,       hex: '#c084fc' },
+      { name: 'Node.js', Icon: SiNodedotjs, hex: '#4ade80' },
+      { name: 'Express', Icon: SiExpress, hex: '#a78bfa' },
+      { name: 'REST APIs', Icon: TbApi, hex: '#c084fc' },
     ],
   },
   {
     label: 'Data & Tools',
     items: [
-      { name: 'MongoDB',  Icon: SiMongodb,  hex: '#4ade80' },
-      { name: 'MySQL',    Icon: SiMysql,    hex: '#38bdf8' },
+      { name: 'MongoDB', Icon: SiMongodb, hex: '#4ade80' },
+      { name: 'MySQL', Icon: SiMysql, hex: '#38bdf8' },
       { name: 'Firebase', Icon: SiFirebase, hex: '#fb923c' },
-      { name: 'Git',      Icon: SiGit,      hex: '#f87171' },
-      { name: 'Vercel',   Icon: SiVercel,   hex: '#e2e8f0' },
+      { name: 'Git', Icon: SiGit, hex: '#f87171' },
+      { name: 'Vercel', Icon: SiVercel, hex: '#e2e8f0' },
     ],
   },
 ]
@@ -52,30 +52,27 @@ const EXTRAS = [
 
 /* ── Skill card ─────────────────────────────────────────────── */
 function SkillCard({ name, Icon, hex, delay, inView }) {
+  const [active, setActive] = useState(false)
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20, scale: 0.92 }}
       animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative flex flex-col items-center gap-3 py-5 px-3 rounded-2xl cursor-default select-none overflow-hidden"
+      tabIndex={0}
+      onMouseEnter={() => setActive(true)}
+      onMouseLeave={() => setActive(false)}
+      onFocus={() => setActive(true)}
+      onBlur={() => setActive(false)}
+      className="group relative flex flex-col items-center gap-3 py-5 px-3 rounded-2xl cursor-default select-none overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
       style={{
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.07)',
+        background: active ? `rgba(${hexToRgb(hex)}, 0.08)` : 'rgba(255,255,255,0.03)',
+        border: active ? `1px solid ${hex}50` : '1px solid rgba(255,255,255,0.07)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
+        transform: active ? 'translateY(-6px) scale(1.03)' : 'translateY(0) scale(1)',
+        boxShadow: active ? `0 0 24px ${hex}25, 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)` : 'none',
         transition: 'transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease',
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.transform = 'translateY(-6px) scale(1.03)'
-        e.currentTarget.style.background = `rgba(${hexToRgb(hex)}, 0.08)`
-        e.currentTarget.style.borderColor = `${hex}50`
-        e.currentTarget.style.boxShadow = `0 0 24px ${hex}25, 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)`
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.transform = 'translateY(0) scale(1)'
-        e.currentTarget.style.background = 'rgba(255,255,255,0.03)'
-        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'
-        e.currentTarget.style.boxShadow = 'none'
       }}
     >
       {/* Corner shimmer */}
@@ -92,18 +89,8 @@ function SkillCard({ name, Icon, hex, delay, inView }) {
         style={{
           background: `${hex}15`,
           border: `1px solid ${hex}30`,
-          boxShadow: `0 0 0 0 ${hex}40`,
+          boxShadow: active ? `0 0 16px ${hex}60` : `0 0 0 0 ${hex}40`,
           transition: 'box-shadow 0.3s ease',
-        }}
-        ref={el => {
-          if (el) {
-            el.addEventListener('mouseenter', () => {
-              el.style.boxShadow = `0 0 16px ${hex}60`
-            })
-            el.addEventListener('mouseleave', () => {
-              el.style.boxShadow = `0 0 0 0 ${hex}40`
-            })
-          }
         }}
       >
         <Icon style={{ color: hex, width: 20, height: 20, filter: `drop-shadow(0 0 6px ${hex}80)` }} />
@@ -111,8 +98,7 @@ function SkillCard({ name, Icon, hex, delay, inView }) {
 
       {/* Name */}
       <span
-        className="text-[11.5px] font-semibold text-center leading-none z-10"
-        style={{ color: 'rgba(226,232,240,0.85)' }}
+        className="text-[11.5px] font-semibold text-center leading-none z-10 text-gray-700 dark:text-slate-200"
       >
         {name}
       </span>
@@ -129,7 +115,7 @@ function hexToRgb(hex) {
 
 /* ── Main component ─────────────────────────────────────────── */
 export default function Skills() {
-  const ref    = useRef(null)
+  const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
   let globalIndex = 0
@@ -137,8 +123,7 @@ export default function Skills() {
   return (
     <section
       id="skills"
-      className="relative py-28 px-6 sm:px-10 overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #060818 0%, #080d1f 50%, #060818 100%)' }}
+      className="relative py-28 px-6 sm:px-10 overflow-hidden skills-section-bg"
     >
       {/* ── Background ambient blobs ──────────────────────────── */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -191,23 +176,21 @@ export default function Skills() {
         >
           {/* Eyebrow */}
           <div className="inline-flex items-center gap-2.5 mb-5">
-            <div className="h-px w-8" style={{ background: 'linear-gradient(90deg, transparent, #818cf8)' }} />
+            <div className="h-px w-8 bg-gradient-to-r from-transparent to-ink-500 dark:to-[#818cf8]" />
             <span
-              className="text-[11px] font-bold tracking-[0.2em] uppercase"
-              style={{ color: '#818cf8' }}
+              className="text-[11px] font-bold tracking-[0.2em] uppercase text-ink-600 dark:text-[#818cf8]"
             >
               Technical Arsenal
             </span>
-            <div className="h-px w-8" style={{ background: 'linear-gradient(90deg, #818cf8, transparent)' }} />
+            <div className="h-px w-8 bg-gradient-to-r from-ink-500 dark:from-[#818cf8] to-transparent" />
           </div>
 
           {/* Heading */}
           <h2
-            className="font-extrabold leading-tight mb-4"
+            className="text-gray-900 dark:text-[#f1f5f9] font-extrabold leading-tight mb-4"
             style={{
               fontSize: 'clamp(2rem, 5vw, 3.2rem)',
               letterSpacing: '-0.03em',
-              color: '#f1f5f9',
             }}
           >
             Skills &{' '}
@@ -224,8 +207,8 @@ export default function Skills() {
           </h2>
 
           <p
-            className="mx-auto text-[15px] leading-relaxed"
-            style={{ color: 'rgba(148,163,184,0.8)', maxWidth: 440 }}
+            className="mx-auto text-[15px] leading-relaxed text-gray-500 dark:text-slate-400"
+            style={{ maxWidth: 440 }}
           >
             Tools and frameworks I reach for when building full-stack web products.
           </p>
@@ -235,8 +218,7 @@ export default function Skills() {
             initial={{ scaleX: 0 }}
             animate={inView ? { scaleX: 1 } : {}}
             transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-6 mx-auto h-px w-24 rounded-full"
-            style={{ background: 'linear-gradient(90deg, transparent, #818cf8, transparent)' }}
+            className="mt-6 mx-auto h-px w-24 rounded-full bg-gradient-to-r from-transparent via-ink-500 dark:via-[#818cf8] to-transparent"
           />
         </motion.div>
 
@@ -256,25 +238,17 @@ export default function Skills() {
                   className="flex items-center gap-3 mb-5"
                 >
                   <span
-                    className="text-[11px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full"
-                    style={{
-                      color: '#94a3b8',
-                      background: 'rgba(148,163,184,0.08)',
-                      border: '1px solid rgba(148,163,184,0.12)',
-                    }}
+                    className="text-[11px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full text-gray-500 dark:text-[#94a3b8] bg-slate-100 dark:bg-slate-800/40 border border-gray-200 dark:border-slate-800"
                   >
                     {group.label}
                   </span>
                   <div
-                    className="flex-1 h-px"
-                    style={{
-                      background: 'linear-gradient(90deg, rgba(148,163,184,0.2), transparent)',
-                    }}
+                    className="flex-1 h-px bg-gradient-to-r from-slate-200 dark:from-slate-850 to-transparent"
                   />
                 </motion.div>
 
                 {/* Card grid */}
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-3">
+                <div className="grid grid-cols-2 min-[375px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-3">
                   {group.items.map((item, ii) => (
                     <SkillCard
                       key={item.name}
@@ -297,8 +271,7 @@ export default function Skills() {
           className="mt-14 flex flex-wrap items-center gap-2.5"
         >
           <span
-            className="text-[11px] font-bold uppercase tracking-[0.15em] mr-1"
-            style={{ color: '#475569' }}
+            className="text-[11px] font-bold uppercase tracking-[0.15em] mr-1 text-gray-500 dark:text-[#475569]"
           >
             Also:
           </span>
@@ -308,21 +281,7 @@ export default function Skills() {
               initial={{ opacity: 0, scale: 0.85 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.35, delay: 0.6 + i * 0.04 }}
-              className="text-[12px] font-medium px-3 py-1 rounded-full cursor-default"
-              style={{
-                background: 'rgba(99,102,241,0.08)',
-                color: '#a5b4fc',
-                border: '1px solid rgba(99,102,241,0.2)',
-                transition: 'background 0.2s, border-color 0.2s',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = 'rgba(99,102,241,0.16)'
-                e.currentTarget.style.borderColor = 'rgba(99,102,241,0.4)'
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = 'rgba(99,102,241,0.08)'
-                e.currentTarget.style.borderColor = 'rgba(99,102,241,0.2)'
-              }}
+              className="text-[12px] font-medium px-3 py-1 rounded-full cursor-default bg-indigo-50 dark:bg-indigo-900/10 text-indigo-650 dark:text-[#a5b4fc] border border-indigo-200/50 dark:border-indigo-900/30 transition-colors"
             >
               {tag}
             </motion.span>
