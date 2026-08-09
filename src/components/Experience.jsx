@@ -5,20 +5,20 @@ import { FiBriefcase, FiCalendar, FiMapPin } from 'react-icons/fi'
 
 const experiences = [
   {
-    role: 'Java Developer Intern',
-    company: 'CodSoft',
-    duration: 'Nov 2024 – Dec 2024',
-    location: 'Remote',
+    role: 'Junior Developer Intern',
+    company: 'Netcradus Pvt. Ltd.',
+    duration: 'June 2026 – Present',
+    location: 'Onsite',
     type: 'Internship',
-    description: 'Worked as a Java Developer Intern, applying OOP principles to build practical applications.',
+    description: 'Working as a Junior Developer Intern on production web applications, client projects, and an enterprise CRM platform using the MERN stack.',
     responsibilities: [
-      'Built Java applications using core OOP principles — encapsulation, inheritance, and polymorphism',
-      'Debugged and optimized existing codebases to improve performance and code quality',
-      'Collaborated using Git & GitHub for version control and team workflow',
-      'Delivered project milestones on time within a structured internship program',
+      'Contributed to 3 production projects, including the Netcradus official website, OnlinePantry client application, and an enterprise CRM platform.',
+      'Developed and enhanced 10+ CRM modules and workflows, including employee management, attendance, task management, dashboards, notifications, meetings, and administrative operations.',
+      'Developed and integrated 10+ REST APIs across CRM modules, enabling reliable communication between frontend and backend systems with data validation and error handling.',
+      'Resolved 20+ frontend and backend issues and delivered feature enhancements, improving application reliability and user experience.',
     ],
-    tech: ['Java', 'OOP', 'Git', 'GitHub'],
-    emoji: '☕',
+    tech: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'REST API', 'Git', 'GitHub'],
+    emoji: '💻',
   },
   {
     role: 'Full Stack Intern',
