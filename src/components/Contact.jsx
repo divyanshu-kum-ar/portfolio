@@ -30,13 +30,7 @@ export default function Contact() {
     setLoading(true)
     setError('')
 
-    const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY
-
-    if (!accessKey) {
-      setError('Form service key is missing. Please check back later.')
-      setLoading(false)
-      return
-    }
+    const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || '772a6414-2a56-468f-8fad-b3cc74fc2571'
 
     try {
       const response = await fetch('https://api.web3forms.com/submit', {
@@ -50,6 +44,7 @@ export default function Contact() {
           name: form.name.trim(),
           email: form.email.trim(),
           message: form.message.trim(),
+          subject: 'New Message from Portfolio Website',
         }),
       })
 
@@ -59,10 +54,10 @@ export default function Contact() {
         setSubmitted(true)
         setForm({ name: '', email: '', message: '' })
       } else {
-        setError(result.message || 'Submission failed. Please try again.')
+        setError('Failed to send message. Please try again.')
       }
     } catch (err) {
-      setError('A network error occurred. Please verify your connection.')
+      setError('Failed to send message. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -170,7 +165,7 @@ export default function Contact() {
                   <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center mx-auto mb-4">
                     <FiCheck className="w-8 h-8 text-green-500" />
                   </div>
-                  <h4 className="font-display font-bold text-xl text-gray-900 dark:text-white mb-2">Message Sent!</h4>
+                  <h4 className="font-display font-bold text-xl text-gray-900 dark:text-white mb-2">Message sent successfully!</h4>
                   <p className="text-gray-500 dark:text-gray-400 text-sm">Thank you for reaching out. I'll get back to you soon!</p>
                   <button onClick={() => setSubmitted(false)} className="btn-outline mt-6 text-sm py-2 px-4">
                     Send Another
